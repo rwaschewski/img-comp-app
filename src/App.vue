@@ -2,9 +2,9 @@
   <v-app dark toolbar>
     <v-navigation-drawer
       temporary
-      v-model="drawer" 
-      :mini-variant="mini" 
-      dark 
+      v-model="drawer"
+      :mini-variant="mini"
+      dark
       overflow
       absolute
     >
@@ -15,11 +15,11 @@
           </v-list-tile-action>
         </v-list-tile>
         <v-list-tile avatar tag="div">
-          <v-list-tile-avatar>
+          <v-list-tile-avatar v-if="userIsAuthenticated">
             <img src="https://randomuser.me/api/portraits/men/85.jpg" />
           </v-list-tile-avatar>
           <v-list-tile-content>
-            <v-list-tile-title>John Leider</v-list-tile-title>
+            <v-list-tile-title>{{ getUser }}</v-list-tile-title>
           </v-list-tile-content>
           <v-list-tile-action>
             <v-btn icon @click.native.stop="mini = !mini">
@@ -28,21 +28,21 @@
           </v-list-tile-action>
         </v-list-tile>
       </v-list>
-      <v-list class="pt-0" dense>
+      <v-list class="pt-0" >
         <v-divider light></v-divider>
-        <v-list-tile v-for="item in items" :key="item.title">
+        <v-list-tile class="mt-10"v-for="item in menuItems" :key="item.title">
           <v-list-tile-action>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+            <v-list-tile-title><router-link :to="item.link">{{ item.title }}</router-link></v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar fixed dark>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title>Toolbar</v-toolbar-title>
+      <v-toolbar-title>Image Compressor PWA</v-toolbar-title>
     </v-toolbar>
     <main>
       <v-container fluid>
@@ -57,12 +57,29 @@ export default {
   data () {
     return {
       drawer: null,
-      items: [
-        { title: 'Home', icon: 'dashboard' },
-        { title: 'About', icon: 'question_answer' }
-      ],
       mini: false,
       right: null
+    }
+  },
+  computed: {
+    menuItems () {
+      let menuItems = [
+        { title: 'Registrieren', icon: 'dashboard', link: '/signup' },
+        { title: 'Anmelden', icon: 'question_answer', link: '/signin' }
+      ]
+      if (this.userIsAuthenticated) {
+        menuItems = [
+          { title: 'Komprimieren', icon: 'question_answer', link: '/' },
+          { title: 'Bilder', icon: 'dashboard', link: '/images' }
+        ]
+      }
+      return menuItems
+    },
+    getUser () {
+      return this.$store.getters.user
+    },
+    userIsAuthenticated () {
+      return this.$store.getters.user !== null && this.$store.getters.user !== undefined
     }
   }
 }

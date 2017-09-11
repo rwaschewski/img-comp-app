@@ -4,15 +4,26 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
+import Vuefire from 'vuefire'
+import firebaseService from './service/firebaseService'
+import VueResource from 'vue-resource'
+import { store } from './store'
+import('../node_modules/vuetify/dist/vuetify.min.css')
 
 Vue.config.productionTip = false
 
 Vue.use(Vuetify)
+Vue.use(Vuefire)
+Vue.use(VueResource)
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  firebase: {
+    compImg: firebaseService.database.ref('compImg').orderByChild('created_at')
+  },
   router,
+  store,
   template: '<App/>',
   components: { App }
 })

@@ -17,5 +17,6 @@
   "display": "fullscreen",
   "orientation": "vertical",
   "background_color": "#006177",
-  "theme_color": "#006177"
+  "theme_color": "#006177",
+  "scope": "."
 }
