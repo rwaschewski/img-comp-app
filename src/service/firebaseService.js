@@ -11,10 +11,10 @@ firebase.initializeApp(config)
 
 export default {
   database: firebase.database(),
-  uploadImage () {
-    var storageRef = firebase.storage.ref()
+  uploadImage (image) {
+    var storageRef = firebase.storage().ref()
     // File or Blob named mountains.jpg
-    var file = ''
+    var file = image
 
     // Create the file metadata
     var metadata = {

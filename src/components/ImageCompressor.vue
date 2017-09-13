@@ -90,9 +90,6 @@
     },
     computed: {
       savings: function () {
-        console.log(this.original.size)
-        console.log(this.compressed.size)
-        console.log(100 - (this.compressed.size.slice(0, -3) / this.original.size.slice(0, -3) * 100))
         return 100 - (this.compressed.size.slice(0, -3) / this.original.size.slice(0, -3) * 100).toFixed(2)
       }
     },
@@ -101,27 +98,17 @@
         let compressor = this.$refs.compressor.$el
         compressor.click()
       },
-      upload (event) {
-        const files = event.target.files
-        let filename = files[0].name
-        if (filename.lastIndexOf('.') <= 0) {
-          return alert('Bitte wähle ein Bild zum Hochladen!')
-        }
-        const fileReader = new FileReader()
-        fileReader.addEventListener('load', () => {
-          this.imageUrl = fileReader.result
-        })
-        fileReader.readAsDataURL(files[0])
-        this.img = files[0]
-        if (!this.img) {
-          return
-        }
+      upload () {
+        const file = this.compressed
+        // let filename = file.name
+
+        this.$store.dispatch('saveImage', { file: file, url: this.img })
       },
       getFiles (obj) {
         this.img = obj.compressed.blob
         this.original = obj.original
         this.compressed = obj.compressed
-        console.log(obj)
+        console.log(this.compressed)
         this.imgSelected = true
       },
       save () {
