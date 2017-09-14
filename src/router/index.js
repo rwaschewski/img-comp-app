@@ -11,7 +11,7 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '/new',
       name: 'ImageCompressor',
       component: ImageCompressor
     },
@@ -21,7 +21,7 @@ export default new Router({
       component: Signup
     },
     {
-      path: '/signin',
+      path: '/',
       name: 'Signin',
       component: Signin
     },

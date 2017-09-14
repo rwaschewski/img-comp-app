@@ -15,14 +15,15 @@ export const store = new Vuex.Store({
         name: '',
         data: ''
       }
-    ]
+    ],
+    imageUrl: ''
   },
   mutations: {
     // change state from users and loaded images
     setUser (state, payload) {
       state.user = payload
     },
-    saveImage (state, payload) {
+    setImage (state, payload) {
       state.loadedImages.push(payload)
     }
   },
@@ -68,22 +69,25 @@ export const store = new Vuex.Store({
     },
     saveImage ({commit}, payload) {
       // save the compressed image and push the data to firebase
-      console.log(payload)
+      console.log('[ImageBlob]: ' + payload.file.blob)
       const image = {
         name: payload.file.name,
         blob: payload.file.blob,
         url: payload.url
       }
-      var currentUser = firebase.auth().currentUser
+      console.log('[ImageBlob]: ' + image.blob)
+      var authUser = firebase.auth().currentUser
+      var currentUser
 
-      if (currentUser) {
+      if (authUser !== null && currentUser !== undefined) {
         // User is signed in
-        this.state.user = currentUser
+        currentUser = authUser
+        // userName = this.state.user.displayName
       } else {
         // No user is signed in.
-        this.state.user = { name: 'anonymous', email: 'anonymous' }
+        currentUser = { name: 'anonymous', email: 'anonymous' }
       }
-      console.log(this.state.user)
+      // console.log(this.state.user)
       var storageRef = firebase.storage().ref()
       // Create Blob from imagefile
       let blob = new Blob([image.blob], {type: 'image/jpeg'})
@@ -92,7 +96,7 @@ export const store = new Vuex.Store({
         contentType: 'image/jpeg'
       }
       // Define Path to image
-      var pathRef = 'images/' + this.state.user.email + '/' + image.name
+      var pathRef = 'images/' + currentUser.email + '/' + image.name
       // Upload file and metadata to the object 'images/mountains.jpg'
       var uploadTask = storageRef.child(pathRef).put(blob, metadata)
       // Listen for state changes, errors, and completion of the upload.
@@ -128,7 +132,7 @@ export const store = new Vuex.Store({
           }
         }, function () {
         // Upload completed successfully, now we can get the download URL
-          alert('Upload Erfolgreich')
+          alert('Dein Bild wurde komprimiert. Du kannst es mit Rechtsklick, oder langem Druck auf dem Bild, herunterladen.')
           var downloadUrl = storageRef.child(pathRef).getDownloadURL().then(function (url) {
             // `url` is the download URL
             // This can be downloaded directly:
@@ -140,6 +144,7 @@ export const store = new Vuex.Store({
             }
             xhr.open('GET', url)
             xhr.send()
+            this.state.imageUrl = url
           }).catch(function (error) {
             // Handle any errors
             switch (error.code) {
@@ -169,52 +174,6 @@ export const store = new Vuex.Store({
           })
         })
     }
-      /*
-      let imageUrl
-      let key
-      let pathRef
-      let blob = new Blob([image.blob], {type: 'image/jpeg'})
-      var metadata = {
-        contentType: 'image/jpeg'
-      }
-      let storageRef
-      firebaseService.database.ref('compImg').push(image)
-        .then((data) => {
-          key = data.key
-          console.log(key)
-          return key
-        })
-        .then(key => {
-          // Get filename and extension
-          const filename = image.name
-          console.log(blob)
-          // const ext = filename.slice(filename.lastIndexOf('.'))
-          pathRef = 'compImgs/' + key + '_' + filename
-          // Create a storage ref
-          storageRef = firebase.storage().ref(pathRef)
-          // Upload file
-          storageRef.put(blob, metadata)
-        })
-        .then(() => {
-          imageUrl = storageRef.child(pathRef)
-          console.log(imageUrl)
-        })
-        /* .then(fileData => {
-          imageUrl = fileData.metadata.downloadURLs[0]
-          console.log(imageUrl)
-          return firebaseService.database.ref('compImgs').child(key).update({imageUrl: imageUrl})
-        })
-        .then(() => {
-          commit('saveImage', {
-            ...image,
-            imageUrl: imageUrl,
-            id: key
-          })
-        })
-        .catch((error) => {
-          console.log(error)
-        }) */
-      // firebaseService.uploadImage(image)
   },
   getters: {
     loadedImages (state) {
@@ -224,6 +183,9 @@ export const store = new Vuex.Store({
     },
     user (state) {
       return state.user
+    },
+    imageUrl (state) {
+      return state.imageUrl
     }
   }
 })

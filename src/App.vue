@@ -48,7 +48,13 @@
       <v-container fluid>
         <router-view></router-view>
       </v-container>
+
     </main>
+    <v-footer class="footer-text">
+      <v-btn outline small href="https://de.icons8.com/icon/12778/Bild"><small>Bild Icon Credits</small></v-btn>
+      <v-spacer></v-spacer>
+      <div>© Romano Waschewski / Jasmin Mayrowski  {{  new Date().getFullYear() }}</div>
+  </v-footer>
   </v-app>
 </template>
 
@@ -65,11 +71,11 @@ export default {
     menuItems () {
       let menuItems = [
         { title: 'Registrieren', icon: 'dashboard', link: '/signup' },
-        { title: 'Anmelden', icon: 'question_answer', link: '/signin' }
+        { title: 'Anmelden', icon: 'question_answer', link: '/' }
       ]
       if (this.userIsAuthenticated) {
         menuItems = [
-          { title: 'Komprimieren', icon: 'question_answer', link: '/' },
+          { title: 'Komprimieren', icon: 'question_answer', link: '/new' },
           { title: 'Bilder', icon: 'dashboard', link: '/images' }
         ]
       }
@@ -86,5 +92,7 @@ export default {
 </script>
 
 <style>
-
+  .footer-text {
+    font-size: 8px;
+  }
 </style>

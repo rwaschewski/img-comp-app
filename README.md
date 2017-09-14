@@ -16,6 +16,11 @@ npm run build
 
 # build for production and view the bundle analyzer report
 npm run build --report
+
+# build for production with service worker
+npm run build 
+serve dist/
+
 ```
 
 For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

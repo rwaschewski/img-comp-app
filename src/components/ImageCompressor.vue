@@ -55,7 +55,7 @@
         accept="image/*">
       </image-compressor>
       <div class="text-center" v-if="img">
-        <img v-if="img" src="" alt="" :style="{ maxWidth: originalSize ? '100%' : null }" :src="img">
+        <img id="compressedImage" v-if="img" src="" alt="" :style="{ maxWidth: originalSize ? '100%' : null }" :src="img">
       </div>
 
     <!--<fab
@@ -101,8 +101,15 @@
       upload () {
         const file = this.compressed
         // let filename = file.name
-
         this.$store.dispatch('saveImage', { file: file, url: this.img })
+        this.$root.$firebaseRefs.compImg.push({
+          'url': file.blob,
+          'created_at': -1 * new Date().getTime()
+        })
+        .then(() => {
+          this.imageUrl = file.blob
+          this.$store.setImage(file.blob)
+        })
       },
       getFiles (obj) {
         this.img = obj.compressed.blob
@@ -110,16 +117,8 @@
         this.compressed = obj.compressed
         console.log(this.compressed)
         this.imgSelected = true
-      },
-      save () {
-        console.log('[Vue-Fab] Saved Compressed Image')
       }
-    }/* ,
-    mounted () {
-      this.$http.get('http://thecatapi.com/api/images/get?format=xml&results_per_page=1').then(response => {
-        this.catUrl = parse(response.body).root.children['0'].children['0'].children['0'].children['0'].content
-      })
-    } */
+    }
   }
 </script>
 
@@ -153,6 +152,7 @@
   }
   .pink {
     margin: 0 3em 5em 0!important;
+    background-color: "#F57C00"!important
   }
   .logo {
     margin-top: 6em;

@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-container>
+  <v-container class="text-xs-center">
     <v-layout row>
       <v-flex xs12 sm6 offset-sm3>
         <v-card>
@@ -8,7 +8,7 @@
               <form @submit.prevent="onSignin">
                 <h4>Anmelden</h4>
                 <v-layout row>
-                  <v-flex xs12>
+                  <v-flex xs12 sm10 md8 offset-sm1 offset-md2>
                     <v-text-field
                       name="email"
                       label="Mail"
@@ -20,7 +20,7 @@
                   </v-flex>
                 </v-layout>
                 <v-layout row>
-                  <v-flex xs12>
+                  <v-flex xs12 sm10 md8 offset-sm1 offset-md2>
                     <v-text-field
                       name="password"
                       label="Password"
@@ -32,8 +32,15 @@
                   </v-flex>
                 </v-layout>
                 <v-layout row>
-                  <v-flex xs12>
+                  <v-flex xs12 sm10 md8 offset-sm1 offset-md2>
                     <v-btn class="primary" type="submit">Anmelden</v-btn>
+                  </v-flex>
+                </v-layout>
+                <v-layout row>
+                  <v-flex>
+                    <router-link style="color: grey;" :to="{ name: 'Signup' }">Noch nicht registriert?</router-link>
+                    <br>
+                    <router-link style="color: grey;" :to="{ name: 'ImageCompressor' }">Überspringen</router-link>
                   </v-flex>
                 </v-layout>
               </form>
@@ -61,7 +68,7 @@ export default {
   watch: {
     user (value) {
       if (value !== null && value !== undefined) {
-        this.$router.push('/')
+        this.$router.push('/new')
       }
     }
   },
@@ -75,4 +82,5 @@ export default {
 </script>
 
 <style lang="css">
+
 </style>
